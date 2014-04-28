@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Jumbotron Template for Bootstrap</title>
+    <!-- Bootstrap core CSS -->
+    <link href="./css/bootstrap.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="jumbotron.css" rel="stylesheet">
+    <!-- Just for debugging purposes. Don't actually copy this line! -->
+    <!--[if lt IE 9]><script src="../../docs-assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="http://cdn.bootcss.com/html5shiv/3.7.0/html5shiv.min.js"></script>
+      <script src="http://cdn.bootcss.com/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+  <script type="text/javascript" src="./js/jquery.js" ></script>
+  <script src="http://tjs.sjs.sinajs.cn/open/api/js/wb.js?appkey=1065266358" type="text/javascript" charset="utf-8"></script></head>
+  <script type="text/javascript">
+    //用户关键信息
+    var userid = null;
+    var arr_item = null;
+    //用于记录当前展示的是哪个
+    var i = 0; 
+    WB2.anyWhere(function (W) {
+      W.widget.connectButton({
+          id: "wb_connect_btn",
+          type: '3,2',
+          callback: {
+              login: function (o) { //登录后的回调函数
+                  //alert("login: " + o.screen_name)
+                  userid = o.id;
+                     W.parseCMD('/users/show.json', function(oResult, bStatus) {
+                        if(bStatus) {
+                            updateUser(oResult);
+                            loadList(o.id);
+                        }
+                    }, {
+                        screen_name : o.screen_name
+                    }, {
+                        method : 'get',
+                        cache_time : 30
+                    });
+              },
+              logout: function () { //退出后的回调函数
+                  alert('logout');
+              }
+          }
+      });
+  });
+    //load course that haven't been rated by this user
+    function loadList(id){
+          alert(id);
+          $.ajax({
+        type:"GET",
+        url:"server.php",
+        data:{id:id},
+        success:function(data){
+           arr_item = $.parseJSON(data);
+           updateList();
+           //alert(arr_item[i].name);
+              alert(data);
+              //alert('success!');
+              //initialize();
+            }
+        })
+    }
+
+    function updateUser(user){
+      if (user!=null) {
+
+        $.ajax({
+          type:"POST",
+          url:"server.php",
+          data:{id:user.id,screen_name:user.screen_name,gender:user.gender,age:user.age},
+          success:function(data){
+            //alert(data);
+          }
+        })
+      };
+    }
+
+    function updateList(){
+           $(".info#name").text(arr_item[i].name);
+           $(".info#picture").attr("src",arr_item[i].image);
+           $(".info#description").text(arr_item[i].description);
+           $(".info#institution").text(arr_item[i].institution);
+           $(".info#language").text(arr_item[i].language);
+           $(".info#workload").text(arr_item[i].workload);
+           $(".info#teacher").text(arr_item[i].instructors);
+           $(".info#catagories").text(arr_item[i].catagories);
+           $(".info#platform").text("coursera");
+           $(".info#link").text(arr_item[i].course_url);
+           $(".info#link").attr("src",arr_item[i].course_url);
+    }
+
+    function rate(j){
+      alert(userid);
+      $.ajax({
+         type:"POST",
+          url:"server.php",
+          data:{userid:userid,itemid:arr_item[i].id,rate:j},
+          success:function(data){
+            alert(data);
+            i=i+1;
+            updateList();
+          }
+      })
+    }
+
+  </script>
+
+  <body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Project name</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <form class="navbar-form navbar-right" role="form">
+            <div id="wb_connect_btn" ></div>
+
+          </form>
+        </div><!--/.navbar-collapse -->
+      </div>
+    </div>
+
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron">
+      <div class="container">
+        <h1>Hello, world!</h1>
+        <p>This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
+        <p><a class="btn btn-primary btn-lg" role="button">Learn more &raquo;</a></p>
+      </div>
+    </div>
+
+    <div class="container">
+      <!-- Example row of columns -->
+      <div class="row" align="left">
+        <div class="col-md-12" id="1">
+          <div class="col-md-12">
+          <h2 class="info" id="name"></h2>
+          </div>
+            <div class="col-md-6"><img src="#" class="img-thumbnail info" id="picture"></div>
+            <div class="col-md-6">
+              <ul class="list-group">
+                <li class="list-group-item">办学机构：<span class="info" id="institution"></span></li>
+                <li class="list-group-item">教学语言：<span class="info" id="language"></span></li>
+                <li class="list-group-item">工作量：<span class="info" id="workload"></span></li>
+                <li class="list-group-item">教学老师：<span class="info" id="teacher"></span></li>
+                <li class="list-group-item">所属分类：<span class="info" id="catagories"></span></li>
+                <li class="list-group-item">所属平台：<span class="info" id="platform"></span></li>
+                <li class="list-group-item">课程链接：<a class="info" id="link" src="#"></a></li>
+              </ul>
+            </div>
+          <div class="col-md-12">
+          <h4>课程简介：</h4>           
+          <p class="info" id="description"></p>
+          <div class="col-md-2">
+            <a class="btn btn-primary" href="#" role="button" onclick="rate(3)">Like &raquo;</a>
+          </div>
+          <div class="col-md-2">
+            <a class="btn btn-success" href="#" role="button" onclick="rate(1)">Not sure &raquo;</a>
+          </div>
+          <div class="col-md-2">
+            <a class="btn btn-danger" href="#" role="button" onclick="rate(0)">Dislike &raquo;</a>
+          </div>
+        </div>
+      </div>
+    </div>
+      <hr>
+
+      <footer>
+        <p>&copy; Company 2013</p>
+      </footer>
+    </div> <!-- /container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="http://cdn.bootcss.com/jquery/1.10.2/jquery.min.js"></script>
+    <script src="./css/bootstrap.min.js"></script>
+  </body>
+</html>
