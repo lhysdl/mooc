@@ -1,8 +1,8 @@
 <?php
 error_reporting(0);
-
-$database="mr";
-mysql_connect('localhost',root,null);
+ini_set('default_charset','utf-8');
+$database="hands_mr";
+mysql_connect('localhost','hands_mr','root.1234');
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 */
 
 
-	$link = mysql_connect('localhost',root,null); 
+	$link = mysql_connect('localhost','hands_mr','root.1234');
 	if(!$link){
 		die('Not connected : ' . mysql_error());
 		$error = 'Not connected : ' . mysql_error();
@@ -67,7 +67,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
 
 	echo json_encode($finalarray);
-
+	//$arr = urlencode(serialize(array('a'=>'小灰狼')));
+	//echo $arr;
 	}
 	// get is done
 	mysql_close(); 
@@ -86,7 +87,7 @@ else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 	// 1. check that all of the parameters are present
 	if (!empty($id) && !empty($screen_name)){
-		$link = mysql_connect('localhost',root,null);
+		$link = mysql_connect('localhost','hands_mr','root.1234');
 		if(!$link){
 			die('Not connected : ' . mysql_error());
 			$error = 'Not connected : ' . mysql_error();
@@ -140,9 +141,9 @@ else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		mysql_close();
 
 	}
-	else if (!empty($user_id) && !empty($item_id)&& !empty($rate)) {
+	else if (!empty($user_id) && !empty($item_id)) {
 	 	# code...
-	 	$link = mysql_connect('localhost',root,null);
+	 	$link = mysql_connect('localhost','hands_mr','root.1234');
 		if(!$link){
 			die('Not connected : ' . mysql_error());
 			$error = 'Not connected : ' . mysql_error();
@@ -190,7 +191,7 @@ else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		echo json_encode($arr); 
 		//echo $user_id;
 		//echo $item_id;
-		//echo $rate;
+		echo $rate;
 
 
 	}
