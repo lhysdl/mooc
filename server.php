@@ -3,6 +3,7 @@ error_reporting(0);
 ini_set('default_charset','utf-8');
 $database="hands_mr";
 mysql_connect('localhost','hands_mr','root.1234');
+mysql_query("SET NAMES UTF8");
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
@@ -50,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 		echo json_encode($arr); 
 	}
 	//echo $query_string;
-
+	mysql_query("SET NAMES UTF8");
 	$result = mysql_query($query_string);
 	if(!$result){
 
@@ -61,14 +62,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 	} else {
 		$finalarray = array();
 		while ($row = mysql_fetch_assoc($result)) { 
-		$stack=array("id"=>$row['id'],"name"=>$row['name'],"description"=>$row['description'],"institution"=>$row['institution'],"language"=>$row['language'],"course_url"=>$row['course_url'],"image"=>$row['image'],"workload"=>$row['workload'],"instructors"=>$row['instructors'],"catagories"=>$row['catagories']);
+		$stack=array("id"=>$row['id'],"name"=>urlencode($row['name']),"description"=>$row['description'],"institution"=>$row['institution'],"language"=>$row['language'],"course_url"=>$row['course_url'],"image"=>$row['image'],"workload"=>$row['workload'],"instructors"=>$row['instructors'],"catagories"=>$row['catagories']);
+		/*foreach ($stack as $key => $value) {
+			# code...
+			$data[] = urlencode($value);
+		}*/
 		array_push($finalarray , $stack);
+
 	}
 
 
-	echo json_encode($finalarray);
-	//$arr = urlencode(serialize(array('a'=>'小灰狼')));
-	//echo $arr;
+	echo  urldecode(json_encode($finalarray));
+
 	}
 	// get is done
 	mysql_close(); 
@@ -82,6 +87,8 @@ else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	$user_id = $_POST['userid'];
 	$item_id = $_POST['itemid'];
 	$rate = $_POST['rate'];
+	//echo $screen_name;
+	//echo mb_detect_encoding($screen_name);
 	//$markedby = $_POST['markedby'];
 
 
@@ -168,7 +175,7 @@ else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		);
 		echo $query_string;
 		echo $database;
-
+		mysql_query("SET NAMES utf8");
 		if(!mysql_query($query_string))
 		{
 
@@ -189,8 +196,6 @@ else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	else {
 		$arr = array('success' => false, 'error' => 'Not all variables given' );
 		echo json_encode($arr); 
-		//echo $user_id;
-		//echo $item_id;
 		echo $rate;
 
 

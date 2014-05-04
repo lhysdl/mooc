@@ -98,7 +98,7 @@
            $(".info#catagories").text(arr_item[i].catagories);
            $(".info#platform").text("coursera");
            $(".info#link").text(arr_item[i].course_url);
-           $(".info#link").attr("src",arr_item[i].course_url);
+           $(".info#link").attr("href",arr_item[i].course_url);
            window.scrollTo(0,document.body.scrollHeight);
     }
 
@@ -164,7 +164,7 @@
                 <li class="list-group-item">教学老师：<span class="info" id="teacher"></span></li>
                 <li class="list-group-item">所属分类：<span class="info" id="catagories"></span></li>
                 <li class="list-group-item">所属平台：<span class="info" id="platform"></span></li>
-                <li class="list-group-item">课程链接：<a class="info" id="link" src="#"></a></li>
+                <li class="list-group-item">课程链接：<a style="cursor:hand" class="info" id="link" href="#" target="_blank"></a></li>
               </ul>
             </div>
           <div class="col-md-12">
